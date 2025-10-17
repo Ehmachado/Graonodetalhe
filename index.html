@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grao - Análise de Dados Agro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a7c59 0%, #7cb342 50%, #8bc34a 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f5f0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e5539 0%, #4a7c59 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+
+        .header-subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .toolbar {
+            background: #e8ebe4;
+            padding: 15px 40px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            border-bottom: 2px solid #7cb342;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a7c59 0%, #7cb342 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 124, 89, 0.4);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #4a7c59;
+            border: 2px solid #4a7c59;
+        }
+
+        .btn-secondary:hover {
+            background: #4a7c59;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #c62828;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b71c1c;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #5a6c57;
+        }
+
+        .empty-state-icon {
+            font-size: 8em;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+            opacity: 0.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4a7c59 0%, #7cb342 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .stat-card p {
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #7cb342;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2e5539;
+        }
+
+        .filter-group select {
+            padding: 12px;
+            border: 2px solid #d4d9ce;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            background: white;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #7cb342;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7cb342;
+        }
+
+        .section-header h2 {
+            color: #2e5539;
+            font-size: 1.5em;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .table-container {
+            overflow: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: white;
+            max-height: 500px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #2e5539 0%, #4a7c59 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e8ebe4;
+        }
+
+        tr:hover {
+            background: #f9faf8;
+        }
+
+        tr:nth-child(even) {
+            background: #fafaf9;
+        }
+
+        tr:nth-child(even):hover {
+            background: #f5f6f4;
+        }
+
+        .totalizador {
+            background: linear-gradient(135deg, #4a7c59 0%, #7cb342 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+        }
+
+        .summary-section {
+            margin-top: 40px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4a7c59;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .file-info {
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 6px;
+            border-left: 4px solid #7cb342;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .file-info-text {
+            flex: 1;
+            font-weight: 600;
+            color: #2e5539;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">🌾</div>
+                <div>
+                    <h1>GRAO</h1>
+                    <div class="header-subtitle">Sistema de Análise de Dados Agro</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <input type="file" id="fileInput" accept=".xlsx,.csv">
+            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                📁 Carregar Planilha
+            </button>
+            <button class="btn btn-danger" id="btnLimpar" onclick="limparDados()" style="display: none;">
+                🗑️ Limpar Dados
+            </button>
+            <div id="fileInfo" class="file-info" style="display: none;">
+                <span>📄</span>
+                <span class="file-info-text" id="fileName"></span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="emptyState" class="empty-state">
+                <div class="empty-state-icon">🌾</div>
+                <h2>Bem-vindo ao Grao</h2>
+                <p>Carregue uma planilha (.xlsx ou .csv) para começar a análise</p>
+            </div>
+
+            <div id="dataSection" style="display: none;">
+                <div id="statsSection">
+                    <div class="stats">
+                        <div class="stat-card">
+                            <h3>TOTAL DE REGISTROS</h3>
+                            <p id="totalRegistros">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>REGISTROS FILTRADOS</h3>
+                            <p id="registrosFiltrados">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>AGÊNCIAS ÚNICAS</h3>
+                            <p id="agenciasUnicas">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="filterProposta">📋 Filtrar por Proposta</label>
+                        <select id="filterProposta">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterEstado">📊 Filtrar por Estado da Solicitação</label>
+                        <select id="filterEstado">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterPrefixo">🏢 Filtrar por Prefixo (Agência)</label>
+                        <select id="filterPrefixo">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="mainTableSection">
+                    <div class="section-header">
+                        <h2>📊 Tabela Principal</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary btn-small" onclick="copiarTabela('mainTable')">
+                                📋 Copiar
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="exportarTabela('mainTable', 'Dados_Principal')">
+                                💾 Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="mainTable">
+                            <thead id="mainTableHeader"></thead>
+                            <tbody id="mainTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="summarySection" class="summary-section">
+                    <div class="section-header">
+                        <h2>📈 Tabela Resumo por Agência</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary btn-small" onclick="copiarTabela('summaryTable')">
+                                📋 Copiar
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="exportarTabela('summaryTable', 'Resumo_Agencias')">
+                                💾 Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="summaryTable">
+                            <thead>
+                                <tr>
+                                    <th>Prefixo</th>
+                                    <th>Dependência</th>
+                                    <th>Situação da Proposta</th>
+                                    <th>Valor Total</th>
+                                    <th>Estado da Solicitação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="totalizador">
+                        <span>💰 VALOR TOTAL: </span>
+                        <span id="totalGeral">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        const excludedColumns = [
+            'CÓDIGO',
+            'Linhas de recurso',
+            'Solicitação',
+            'Super comercial',
+            'Prefixo (duplicado)',
+            'ITF',
+            'ALIENAÇÃO FIDUCIÁRIA',
+            'MELHOR RISCO (Rel 1036 Pub. 28)'
+        ];
+
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('filterProposta').addEventListener('change', applyFilters);
+        document.getElementById('filterEstado').addEventListener('change', applyFilters);
+        document.getElementById('filterPrefixo').addEventListener('change', applyFilters);
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileInfo').style.display = 'flex';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = e.target.result;
+                
+                if (file.name.endsWith('.csv')) {
+                    parseCSV(data);
+                } else {
+                    parseExcel(data);
+                }
+            };
+
+            if (file.name.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function parseCSV(data) {
+            Papa.parse(data, {
+                header: true,
+                dynamicTyping: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    allData = results.data;
+                    processData();
+                }
+            });
+        }
+
+        function parseExcel(data) {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            allData = XLSX.utils.sheet_to_json(firstSheet);
+            processData();
+        }
+
+        function processData() {
+            if (allData.length === 0) {
+                mostrarNotificacao('⚠️ Nenhum dado encontrado na planilha!');
+                return;
+            }
+
+            populateFilters();
+            displayMainTable(allData);
+            displaySummaryTable(allData);
+            updateStats(allData, allData);
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('dataSection').style.display = 'block';
+            document.getElementById('btnLimpar').style.display = 'flex';
+
+            mostrarNotificacao('✅ Planilha carregada com sucesso!');
+        }
+
+        function limparDados() {
+            if (!confirm('Deseja realmente limpar todos os dados?')) return;
+
+            allData = [];
+            document.getElementById('emptyState').style.display = 'flex';
+            document.getElementById('dataSection').style.display = 'none';
+            document.getElementById('btnLimpar').style.display = 'none';
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+
+            mostrarNotificacao('🗑️ Dados limpos com sucesso!');
+        }
+
+        function populateFilters() {
+            const propostaValues = ['Acolhida', 'Analisada', 'Despachada', 'Em acolhimento'];
+            const estadoValues = ['Deferida', 'Solicitada', 'Solicitada (Aguardando recursos)'];
+            
+            const filterProposta = document.getElementById('filterProposta');
+            const filterEstado = document.getElementById('filterEstado');
+            const filterPrefixo = document.getElementById('filterPrefixo');
+
+            filterProposta.innerHTML = '<option value="">Todos</option>';
+            propostaValues.forEach(val => {
+                filterProposta.innerHTML += `<option value="${val}">${val}</option>`;
+            });
+
+            filterEstado.innerHTML = '<option value="">Todos</option>';
+            estadoValues.forEach(val => {
+                filterEstado.innerHTML += `<option value="${val}">${val}</option>`;
+            });
+
+            const prefixos = [...new Set(allData.map(row => row['Prefixo']).filter(p => p))].sort();
+            filterPrefixo.innerHTML = '<option value="">Todos</option>';
+            prefixos.forEach(prefix => {
+                filterPrefixo.innerHTML += `<option value="${prefix}">${prefix}</option>`;
+            });
+        }
+
+        function displayMainTable(data) {
+            const headers = Object.keys(data[0] || {}).filter(h => !excludedColumns.includes(h));
+            
+            const headerRow = document.getElementById('mainTableHeader');
+            headerRow.innerHTML = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+
+            const tbody = document.getElementById('mainTableBody');
+            tbody.innerHTML = data.map(row => {
+                return '<tr>' + headers.map(h => {
+                    let value = row[h] !== undefined ? row[h] : '';
+                    if (h === 'Valor total' && typeof value === 'number') {
+                        value = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    }
+                    return `<td>${value}</td>`;
+                }).join('') + '</tr>';
+            }).join('');
+        }
+
+        function displaySummaryTable(data) {
+            const summaryColumns = ['Prefixo', 'Dependência', 'Situação da proposta', 'Valor total', 'Estado da solicitação'];
+            
+            const tbody = document.getElementById('summaryTableBody');
+            tbody.innerHTML = data.map(row => {
+                return '<tr>' + summaryColumns.map(col => {
+                    let value = row[col];
+                    if (col === 'Valor total' && typeof value === 'number') {
+                        value = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    }
+                    return `<td>${value !== undefined ? value : ''}</td>`;
+                }).join('') + '</tr>';
+            }).join('');
+
+            updateTotal(data);
+        }
+
+        function updateTotal(data) {
+            const total = data.reduce((sum, row) => {
+                const valor = parseFloat(row['Valor total']) || 0;
+                return sum + valor;
+            }, 0);
+
+            document.getElementById('totalGeral').textContent = total.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            });
+        }
+
+        function updateStats(filteredData, allDataRef) {
+            document.getElementById('totalRegistros').textContent = allDataRef.length;
+            document.getElementById('registrosFiltrados').textContent = filteredData.length;
+            
+            const agenciasUnicas = new Set(filteredData.map(row => row['Prefixo']).filter(p => p));
+            document.getElementById('agenciasUnicas').textContent = agenciasUnicas.size;
+        }
+
+        function applyFilters() {
+            const filterProposta = document.getElementById('filterProposta').value;
+            const filterEstado = document.getElementById('filterEstado').value;
+            const filterPrefixo = document.getElementById('filterPrefixo').value;
+
+            let filteredData = allData.filter(row => {
+                let match = true;
+
+                if (filterProposta && row['Proposta'] !== filterProposta) {
+                    match = false;
+                }
+
+                if (filterEstado && row['Estado da solicitação'] !== filterEstado) {
+                    match = false;
+                }
+
+                if (filterPrefixo && row['Prefixo'] !== filterPrefixo) {
+                    match = false;
+                }
+
+                return match;
+            });
+
+            displayMainTable(filteredData);
+            displaySummaryTable(filteredData);
+            updateStats(filteredData, allData);
+        }
+
+        function copiarTabela(tableId) {
+            const table = document.getElementById(tableId);
+            let range = document.createRange();
+            range.selectNode(table);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            mostrarNotificacao('📋 Tabela copiada para a área de transferência!');
+        }
+
+        function exportarTabela(tableId, nomeArquivo) {
+            const table = document.getElementById(tableId);
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Dados" });
+            XLSX.writeFile(wb, `${nomeArquivo}_${new Date().toISOString().split('T')[0]}.xlsx`);
+            
+            mostrarNotificacao('💾 Tabela exportada com sucesso!');
+        }
+
+        function mostrarNotificacao(mensagem) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = mensagem;
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
