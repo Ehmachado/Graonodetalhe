@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise de Solicitações - Planilha</title>
+    <title>Grão no Detalhe - Análise de Solicitações</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,10 +24,11 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: #f5f7fa;
+            background: linear-gradient(135deg, #f5f7e8 0%, #e8f5e9 100%);
             color: #2d3748;
             padding: 20px;
             line-height: 1.6;
+            min-height: 100vh;
         }
         
         .container {
@@ -36,180 +37,298 @@
         }
         
         .header {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #558b2f 0%, #689f38 100%);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(85, 139, 47, 0.3);
+            margin-bottom: 25px;
+            color: white;
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 36px;
             font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 400;
         }
         
         .help-text {
-            color: #718096;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
             font-size: 14px;
-            margin-bottom: 20px;
+            line-height: 1.6;
         }
         
-        .file-input-wrapper {
+        .help-text strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .file-upload-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .file-upload-section h3 {
+            color: #558b2f;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .file-controls {
             display: flex;
             gap: 15px;
             align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
         }
         
         .file-input-wrapper input[type="file"] {
-            padding: 10px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px dashed #7cb342;
+            border-radius: 10px;
             font-size: 14px;
             cursor: pointer;
-            background: white;
+            background: #f1f8e9;
+            transition: all 0.3s;
+        }
+        
+        .file-input-wrapper input[type="file"]:hover {
+            border-color: #558b2f;
+            background: #dcedc8;
         }
         
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
         .btn-primary {
-            background: #3182ce;
+            background: #558b2f;
             color: white;
         }
         
-        .btn-primary:hover {
-            background: #2c5282;
+        .btn-primary:hover:not(:disabled) {
+            background: #33691e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(85, 139, 47, 0.3);
         }
         
         .btn-secondary {
-            background: #48bb78;
+            background: #7cb342;
             color: white;
         }
         
-        .btn-secondary:hover {
-            background: #38a169;
+        .btn-secondary:hover:not(:disabled) {
+            background: #689f38;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
+        }
+        
+        .btn-danger {
+            background: #ef6c00;
+            color: white;
+        }
+        
+        .btn-danger:hover:not(:disabled) {
+            background: #e65100;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 108, 0, 0.3);
+        }
+        
+        .btn-export {
+            background: #fbc02d;
+            color: #333;
+        }
+        
+        .btn-export:hover:not(:disabled) {
+            background: #f9a825;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 192, 45, 0.3);
         }
         
         .alert {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 16px 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
             font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .alert-warning {
-            background: #fef5e7;
-            border-left: 4px solid #f39c12;
-            color: #856404;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            color: #e65100;
+        }
+        
+        .alert-success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
         }
         
         .filters-panel {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
         }
         
         .filters-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #558b2f;
         }
         
         .badge {
-            background: #3182ce;
+            background: #7cb342;
             color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
             font-weight: 500;
         }
         
         .filters-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
         
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
         
-        .filter-group label {
-            font-weight: 500;
-            font-size: 14px;
-            color: #4a5568;
+        .filter-group > label {
+            font-weight: 600;
+            font-size: 15px;
+            color: #558b2f;
         }
         
         .checkbox-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 10px;
-            background: #f7fafc;
-            border-radius: 6px;
+            gap: 10px;
+            padding: 15px;
+            background: #f1f8e9;
+            border-radius: 8px;
+            border: 1px solid #c5e1a5;
         }
         
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
+            accent-color: #558b2f;
         }
         
         .checkbox-item label {
             font-weight: 400;
             cursor: pointer;
             font-size: 14px;
+            flex: 1;
         }
         
         select {
-            padding: 10px;
-            border: 2px solid #e2e8f0;
+            padding: 12px 15px;
+            border: 2px solid #c5e1a5;
             border-radius: 8px;
             font-size: 14px;
             background: white;
             cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #558b2f;
         }
         
         .search-box {
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         .search-box input {
             width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #e2e8f0;
+            padding: 12px 15px;
+            border: 2px solid #c5e1a5;
             border-radius: 8px;
             font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #558b2f;
         }
         
         .table-container {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
             overflow: hidden;
         }
         
@@ -217,24 +336,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .table-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
+            color: #558b2f;
         }
         
         .table-count {
             font-size: 14px;
-            color: #718096;
+            color: #7cb342;
+            font-weight: 500;
         }
         
         .table-wrapper {
             overflow-x: auto;
             max-height: 600px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border: 2px solid #c5e1a5;
+            border-radius: 10px;
         }
         
         table {
@@ -246,47 +369,50 @@
         thead {
             position: sticky;
             top: 0;
-            background: #f7fafc;
+            background: linear-gradient(135deg, #558b2f 0%, #689f38 100%);
             z-index: 10;
         }
         
         th {
-            padding: 12px;
+            padding: 14px 12px;
             text-align: left;
             font-weight: 600;
-            border-bottom: 2px solid #e2e8f0;
+            color: white;
             white-space: nowrap;
         }
         
         td {
             padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e8f5e9;
         }
         
         tbody tr:hover {
-            background: #f7fafc;
+            background: #f1f8e9;
         }
         
         .subtotal-row {
-            background: #edf2f7 !important;
+            background: #dcedc8 !important;
             font-weight: 600;
         }
         
         .subtotal-row td {
-            border-top: 2px solid #cbd5e0;
-            border-bottom: 2px solid #cbd5e0;
+            border-top: 2px solid #7cb342;
+            border-bottom: 2px solid #7cb342;
+            color: #33691e;
         }
         
         .total-general {
-            margin-top: 15px;
-            padding: 15px;
-            background: #edf2f7;
-            border-radius: 8px;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%);
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #33691e;
+            border: 2px solid #7cb342;
         }
         
         .pagination {
@@ -295,29 +421,78 @@
             align-items: center;
             gap: 15px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
         
         .pagination button {
-            padding: 8px 16px;
-            border: 1px solid #e2e8f0;
+            padding: 10px 20px;
+            border: 2px solid #c5e1a5;
             background: white;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: #558b2f;
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            background: #f1f8e9;
+            border-color: #7cb342;
         }
         
         .pagination button:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
         }
         
         .pagination span {
             font-size: 14px;
-            color: #718096;
+            color: #558b2f;
+            font-weight: 500;
         }
         
         .hidden {
-            display: none;
+            display: none !important;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #558b2f;
+            font-size: 16px;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .file-controls {
+                flex-direction: column;
+            }
+            
+            .file-input-wrapper {
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -325,15 +500,34 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📊 Análise de Solicitações</h1>
+            <h1>🌾 Grão no Detalhe</h1>
+            <div class="subtitle">Sistema de Análise de Solicitações Agropecuárias</div>
             <div class="help-text">
-                <strong>Como usar:</strong> Carregue um arquivo .xlsx ou .csv com os dados das solicitações. 
-                Use os filtros para analisar os dados. A tabela resumo mostra totalizações por agência (Prefixo).
-                Você pode exportar a tabela resumo filtrada para CSV.
+                <strong>📋 Instruções de Uso:</strong>
+                1. Selecione um arquivo .xlsx ou .csv com os dados das solicitações<br>
+                2. Clique em "Carregar Planilha" para processar os dados<br>
+                3. Use os filtros para analisar informações específicas<br>
+                4. A tabela resumo mostra totalizações por agência com subtotais<br>
+                5. Exporte o resumo filtrado para CSV quando necessário
             </div>
-            <div class="file-input-wrapper">
-                <input type="file" id="fileInput" accept=".xlsx,.csv">
-                <button class="btn btn-primary" onclick="loadExampleData()">Carregar Dados de Exemplo</button>
+        </div>
+        
+        <!-- File Upload Section -->
+        <div class="file-upload-section">
+            <h3>📁 Carregar Dados</h3>
+            <div class="file-controls">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept=".xlsx,.csv">
+                </div>
+                <button class="btn btn-primary" id="loadBtn" onclick="loadFile()" disabled>
+                    📤 Carregar Planilha
+                </button>
+                <button class="btn btn-secondary" onclick="loadExampleData()">
+                    📊 Dados de Exemplo
+                </button>
+                <button class="btn btn-danger" id="clearBtn" onclick="clearData()" disabled>
+                    🗑️ Limpar Tudo
+                </button>
             </div>
         </div>
         
@@ -343,7 +537,7 @@
         <!-- Filters Panel -->
         <div class="filters-panel hidden" id="filtersPanel">
             <div class="filters-title">
-                <span>Filtros</span>
+                <span>🔍 Filtros de Análise</span>
                 <span class="badge hidden" id="filterBadge">0 filtros aplicados</span>
             </div>
             <div class="filters-grid">
@@ -363,14 +557,14 @@
                 </div>
             </div>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 Buscar em todas as colunas...">
+                <input type="text" id="searchInput" placeholder="🔍 Buscar em todas as colunas da tabela principal...">
             </div>
         </div>
         
         <!-- Main Table -->
         <div class="table-container hidden" id="mainTableContainer">
             <div class="table-header">
-                <h2 class="table-title">Tabela Principal</h2>
+                <h2 class="table-title">📋 Tabela Principal</h2>
                 <span class="table-count" id="mainTableCount">0 linhas</span>
             </div>
             <div class="table-wrapper">
@@ -389,10 +583,12 @@
         <!-- Summary Table -->
         <div class="table-container hidden" id="summaryTableContainer">
             <div class="table-header">
-                <h2 class="table-title">Tabela Resumo por Agência</h2>
-                <div style="display: flex; gap: 10px; align-items: center;">
+                <h2 class="table-title">📊 Resumo por Agência</h2>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <span class="table-count" id="summaryTableCount">0 linhas</span>
-                    <button class="btn btn-secondary" onclick="exportSummaryCSV()">📥 Exportar Resumo (CSV)</button>
+                    <button class="btn btn-export" onclick="exportSummaryCSV()">
+                        💾 Exportar Resumo (CSV)
+                    </button>
                 </div>
             </div>
             <div class="table-wrapper">
@@ -410,7 +606,7 @@
                 </table>
             </div>
             <div class="total-general">
-                <span>Total Geral:</span>
+                <span>💰 Total Geral:</span>
                 <span id="totalGeneral">R$ 0,00</span>
             </div>
         </div>
@@ -513,6 +709,7 @@
         let filteredData = [];
         let columnMapping = {};
         let visibleColumns = [];
+        let selectedFile = null;
         
         // Pagination
         let currentPage = 1;
@@ -637,8 +834,13 @@
             const container = document.getElementById('alertsContainer');
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
-            alert.textContent = message;
+            alert.innerHTML = `<span style="font-size: 18px;">${type === 'warning' ? '⚠️' : '✅'}</span><span>${message}</span>`;
             container.appendChild(alert);
+            
+            // Remove automaticamente após 10 segundos
+            setTimeout(() => {
+                alert.remove();
+            }, 10000);
         }
         
         /**
@@ -654,21 +856,39 @@
          * Event listener para input de arquivo
          */
         document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+            selectedFile = e.target.files[0];
+            const loadBtn = document.getElementById('loadBtn');
             
-            const extension = file.name.split('.').pop().toLowerCase();
-            
-            if (extension === 'csv') {
-                loadCSV(file);
-            } else if (extension === 'xlsx') {
-                loadXLSX(file);
+            if (selectedFile) {
+                loadBtn.disabled = false;
             } else {
-                alert('Formato de arquivo não suportado. Use .csv ou .xlsx');
+                loadBtn.disabled = true;
             }
         });
         
         /**
+         * Carrega o arquivo selecionado
+         */
+        function loadFile() {
+            if (!selectedFile) {
+                alert('Selecione um arquivo primeiro!');
+                return;
+            }
+            
+            const extension = selectedFile.name.split('.').pop().toLowerCase();
+            
+            clearAlerts();
+            showAlert('⏳ Carregando arquivo, aguarde...', 'success');
+            
+            if (extension === 'csv') {
+                loadCSV(selectedFile);
+            } else if (extension === 'xlsx') {
+                loadXLSX(selectedFile);
+            } else {
+                showAlert('❌ Formato de arquivo não suportado. Use .csv ou .xlsx', 'warning');
+            }
+        }
+/**
          * Carrega arquivo CSV usando PapaParse
          */
         function loadCSV(file) {
@@ -679,10 +899,13 @@
                 delimitersToGuess: [',', '\t', '|', ';'],
                 encoding: 'UTF-8',
                 complete: function(results) {
+                    clearAlerts();
+                    showAlert(`✅ Arquivo CSV carregado com sucesso! ${results.data.length} linhas encontradas.`, 'success');
                     processData(results.data);
                 },
                 error: function(error) {
-                    alert('Erro ao carregar CSV: ' + error.message);
+                    clearAlerts();
+                    showAlert('❌ Erro ao carregar CSV: ' + error.message, 'warning');
                 }
             });
         }
@@ -704,18 +927,18 @@
                         sheetStubs: true
                     });
                     
-                    // Pega a primeira sheet
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    
-                    // Converte para JSON
                     const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
                         defval: '',
                         raw: false
                     });
                     
+                    clearAlerts();
+                    showAlert(`✅ Arquivo XLSX carregado com sucesso! ${jsonData.length} linhas encontradas.`, 'success');
                     processData(jsonData);
                 } catch (error) {
-                    alert('Erro ao carregar XLSX: ' + error.message);
+                    clearAlerts();
+                    showAlert('❌ Erro ao carregar XLSX: ' + error.message, 'warning');
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -727,27 +950,50 @@
         function loadExampleData() {
             const exampleDataElement = document.getElementById('exampleData');
             const exampleData = JSON.parse(exampleDataElement.textContent);
+            clearAlerts();
+            showAlert('✅ Dados de exemplo carregados com sucesso!', 'success');
             processData(exampleData);
         }
         
-        // ==================== DATA PROCESSING ====================
+        /**
+         * Limpa todos os dados e reseta a interface
+         */
+        function clearData() {
+            if (!confirm('⚠️ Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+            
+            rawData = [];
+            filteredData = [];
+            columnMapping = {};
+            visibleColumns = [];
+            selectedFile = null;
+            currentPage = 1;
+            
+            document.getElementById('fileInput').value = '';
+            document.getElementById('loadBtn').disabled = true;
+            document.getElementById('clearBtn').disabled = true;
+            
+            document.getElementById('filtersPanel').classList.add('hidden');
+            document.getElementById('mainTableContainer').classList.add('hidden');
+            document.getElementById('summaryTableContainer').classList.add('hidden');
+            
+            clearAlerts();
+            showAlert('🗑️ Todos os dados foram limpos!', 'success');
+        }
         
         /**
          * Processa os dados carregados
          */
         function processData(data) {
             if (!data || data.length === 0) {
-                alert('Nenhum dado encontrado no arquivo');
+                showAlert('❌ Nenhum dado encontrado no arquivo', 'warning');
                 return;
             }
             
-            clearAlerts();
             rawData = data;
-            
-            // Identifica as colunas
             const headers = Object.keys(data[0]);
             
-            // Mapeia as colunas importantes
             columnMapping = {
                 proposta: findColumnName(headers, 'proposta'),
                 estado_solicitacao: findColumnName(headers, 'estado_solicitacao'),
@@ -757,7 +1003,6 @@
                 prefixo: findColumnName(headers, 'prefixo')
             };
             
-            // Verifica colunas ausentes e avisa
             const missingColumns = [];
             for (const [key, value] of Object.entries(columnMapping)) {
                 if (!value) {
@@ -766,10 +1011,9 @@
             }
             
             if (missingColumns.length > 0) {
-                showAlert(`⚠️ Colunas não encontradas: ${missingColumns.join(', ')}. Algumas funcionalidades podem não funcionar corretamente.`);
+                showAlert(`⚠️ Colunas não encontradas: ${missingColumns.join(', ')}. Algumas funcionalidades podem não funcionar corretamente.`, 'warning');
             }
             
-            // Normaliza valores monetários
             if (columnMapping.valor_total) {
                 rawData.forEach(row => {
                     const valorStr = row[columnMapping.valor_total];
@@ -777,55 +1021,47 @@
                 });
             }
             
-            // Determina colunas visíveis (excluindo as da lista)
             visibleColumns = headers.filter(col => !EXCLUDED_COLUMNS.includes(col));
             
-            // Inicializa filtros
             initializeFilters();
-            
-            // Renderiza dados
             currentPage = 1;
             applyFilters();
             
-            // Mostra painéis
             document.getElementById('filtersPanel').classList.remove('hidden');
             document.getElementById('mainTableContainer').classList.remove('hidden');
             document.getElementById('summaryTableContainer').classList.remove('hidden');
+            document.getElementById('clearBtn').disabled = false;
         }
-        
-        // ==================== FILTERS ====================
         
         /**
          * Inicializa os controles de filtro
          */
         function initializeFilters() {
-            // Filtro Proposta
             const propostaContainer = document.getElementById('propostaFilters');
             propostaContainer.innerHTML = '';
             PROPOSTA_OPTIONS.forEach(option => {
                 const div = document.createElement('div');
                 div.className = 'checkbox-item';
                 div.innerHTML = `
-                    <input type="checkbox" id="proposta_${option}" value="${option}" onchange="applyFilters()">
-                    <label for="proposta_${option}">${option}</label>
+                    <input type="checkbox" id="proposta_${option.replace(/\s+/g, '_')}" value="${option}" onchange="applyFilters()">
+                    <label for="proposta_${option.replace(/\s+/g, '_')}">${option}</label>
                 `;
                 propostaContainer.appendChild(div);
             });
             
-            // Filtro Estado
             const estadoContainer = document.getElementById('estadoFilters');
             estadoContainer.innerHTML = '';
             ESTADO_OPTIONS.forEach(option => {
                 const div = document.createElement('div');
                 div.className = 'checkbox-item';
+                const safeId = option.replace(/\s+/g, '_').replace(/[()]/g, '');
                 div.innerHTML = `
-                    <input type="checkbox" id="estado_${option}" value="${option}" onchange="applyFilters()">
-                    <label for="estado_${option}">${option}</label>
+                    <input type="checkbox" id="estado_${safeId}" value="${option}" onchange="applyFilters()">
+                    <label for="estado_${safeId}">${option}</label>
                 `;
                 estadoContainer.appendChild(div);
             });
             
-            // Filtro Prefixo
             const prefixoSelect = document.getElementById('prefixoFilter');
             prefixoSelect.innerHTML = '<option value="">Todos</option>';
             
@@ -841,8 +1077,6 @@
             }
             
             prefixoSelect.onchange = applyFilters;
-            
-            // Busca textual
             document.getElementById('searchInput').oninput = applyFilters;
         }
         
@@ -860,7 +1094,6 @@
         function applyFilters() {
             let data = [...rawData];
             
-            // Filtro Proposta
             const selectedPropostas = getSelectedCheckboxes('proposta');
             if (selectedPropostas.length > 0 && columnMapping.proposta) {
                 data = data.filter(row => {
@@ -869,7 +1102,6 @@
                 });
             }
             
-            // Filtro Estado
             const selectedEstados = getSelectedCheckboxes('estado');
             if (selectedEstados.length > 0 && columnMapping.estado_solicitacao) {
                 data = data.filter(row => {
@@ -878,25 +1110,18 @@
                 });
             }
             
-            // Busca textual
             const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
             if (searchText) {
                 data = data.filter(row => {
                     return visibleColumns.some(col => {
-                        const value =
-```html
- normalizeString(row[col]);
+                        const value = normalizeString(row[col]);
                         return value.includes(searchText);
                     });
                 });
             }
             
             filteredData = data;
-            
-            // Atualiza badge de filtros
             updateFilterBadge();
-            
-            // Renderiza tabelas
             currentPage = 1;
             renderMainTable();
             renderSummaryTable();
@@ -926,8 +1151,6 @@
             }
         }
         
-        // ==================== MAIN TABLE RENDERING ====================
-        
         /**
          * Renderiza a tabela principal com paginação
          */
@@ -935,36 +1158,29 @@
             const thead = document.getElementById('mainTableHead');
             const tbody = document.getElementById('mainTableBody');
             
-            // Cabeçalho
             thead.innerHTML = `
                 <tr>
                     ${visibleColumns.map(col => `<th>${col}</th>`).join('')}
                 </tr>
             `;
             
-            // Paginação
             const start = (currentPage - 1) * rowsPerPage;
             const end = start + rowsPerPage;
             const pageData = filteredData.slice(start, end);
             
-            // Corpo
             tbody.innerHTML = pageData.map(row => {
                 return `<tr>
                     ${visibleColumns.map(col => {
                         let value = row[col];
-                        // Formata valores monetários
                         if (col === columnMapping.valor_total && value) {
                             value = formatBRCurrency(row['__valor_numerico'] || 0);
                         }
-                        return `<td>${value || ''}</td>`;
+                        return `<td>${value !== null && value !== undefined ? value : ''}</td>`;
                     }).join('')}
                 </tr>`;
             }).join('');
             
-            // Atualiza contador
             document.getElementById('mainTableCount').textContent = `${filteredData.length} linha${filteredData.length !== 1 ? 's' : ''}`;
-            
-            // Atualiza paginação
             updatePagination();
         }
         
@@ -1005,13 +1221,10 @@
             }
         }
         
-        // ==================== SUMMARY TABLE RENDERING ====================
-        
         /**
          * Renderiza a tabela resumo com agrupamento por Prefixo
          */
         function renderSummaryTable() {
-            // Aplica filtro de Prefixo adicional (apenas para resumo)
             let summaryData = [...filteredData];
             const selectedPrefixo = document.getElementById('prefixoFilter').value;
             
@@ -1022,13 +1235,11 @@
                 });
             }
             
-            // Agrupa por Prefixo
             const grouped = _.groupBy(summaryData, row => {
                 const prefixo = columnMapping.prefixo ? row[columnMapping.prefixo] : '';
                 return prefixo || '(Sem Prefixo)';
             });
             
-            // Ordena prefixos
             const sortedPrefixos = Object.keys(grouped).sort((a, b) => {
                 if (a === '(Sem Prefixo)') return 1;
                 if (b === '(Sem Prefixo)') return -1;
@@ -1042,16 +1253,12 @@
             
             sortedPrefixos.forEach(prefixo => {
                 const rows = grouped[prefixo];
-                
-                // Ordena por Dependência dentro do grupo
                 const sortedRows = _.sortBy(rows, row => 
-                    columnMapping.dependencia ? row[columnMapping.dependencia] : ''
+                    columnMapping.dependencia ? (row[columnMapping.dependencia] || '') : ''
                 );
                 
-                // Subtotal do grupo
                 let subtotal = 0;
                 
-                // Renderiza linhas do grupo
                 sortedRows.forEach(row => {
                     const valorNum = row['__valor_numerico'] || 0;
                     subtotal += valorNum;
@@ -1066,9 +1273,8 @@
                     </tr>`;
                 });
                 
-                // Linha de subtotal
                 html += `<tr class="subtotal-row">
-                    <td colspan="3"><strong>Subtotal ${prefixo}</strong></td>
+                    <td colspan="3"><strong>📊 Subtotal ${prefixo}</strong></td>
                     <td><strong>${formatBRCurrency(subtotal)}</strong></td>
                     <td></td>
                 </tr>`;
@@ -1076,22 +1282,15 @@
                 totalGeral += subtotal;
             });
             
-            tbody.innerHTML = html;
-            
-            // Atualiza total geral
+            tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:30px;color:#999;">Nenhum dado para exibir</td></tr>';
             document.getElementById('totalGeneral').textContent = formatBRCurrency(totalGeral);
-            
-            // Atualiza contador
             document.getElementById('summaryTableCount').textContent = `${rowCount} linha${rowCount !== 1 ? 's' : ''}`;
         }
-        
-        // ==================== CSV EXPORT ====================
         
         /**
          * Exporta a tabela resumo filtrada para CSV
          */
         function exportSummaryCSV() {
-            // Aplica filtro de Prefixo adicional (apenas para resumo)
             let summaryData = [...filteredData];
             const selectedPrefixo = document.getElementById('prefixoFilter').value;
             
@@ -1102,27 +1301,29 @@
                 });
             }
             
-            // Agrupa por Prefixo
+            if (summaryData.length === 0) {
+                showAlert('⚠️ Não há dados para exportar com os filtros atuais.', 'warning');
+                return;
+            }
+            
             const grouped = _.groupBy(summaryData, row => {
                 const prefixo = columnMapping.prefixo ? row[columnMapping.prefixo] : '';
                 return prefixo || '(Sem Prefixo)';
             });
             
-            // Ordena prefixos
             const sortedPrefixos = Object.keys(grouped).sort((a, b) => {
                 if (a === '(Sem Prefixo)') return 1;
                 if (b === '(Sem Prefixo)') return -1;
                 return a.localeCompare(b);
             });
             
-            // Monta CSV
             let csv = 'Prefixo;Dependência;Situação da Proposta;Valor Total;Estado da Solicitação\n';
             let totalGeral = 0;
             
             sortedPrefixos.forEach(prefixo => {
                 const rows = grouped[prefixo];
                 const sortedRows = _.sortBy(rows, row => 
-                    columnMapping.dependencia ? row[columnMapping.dependencia] : ''
+                    columnMapping.dependencia ? (row[columnMapping.dependencia] || '') : ''
                 );
                 
                 let subtotal = 0;
@@ -1135,38 +1336,33 @@
                     const sit = columnMapping.situacao_proposta ? (row[columnMapping.situacao_proposta] || '') : '';
                     const est = columnMapping.estado_solicitacao ? (row[columnMapping.estado_solicitacao] || '') : '';
                     
-                    // Escapa valores com ponto e vírgula
+                    const escapedPrefixo = prefixo.includes(';') ? `"${prefixo}"` : prefixo;
                     const escapedDep = dep.includes(';') ? `"${dep}"` : dep;
                     const escapedSit = sit.includes(';') ? `"${sit}"` : sit;
                     const escapedEst = est.includes(';') ? `"${est}"` : est;
                     
-                    csv += `${prefixo};${escapedDep};${escapedSit};${valorNum.toFixed(2).replace('.', ',')};${escapedEst}\n`;
+                    csv += `${escapedPrefixo};${escapedDep};${escapedSit};${valorNum.toFixed(2).replace('.', ',')};${escapedEst}\n`;
                 });
                 
-                // Linha de subtotal
                 csv += `Subtotal ${prefixo};;;${subtotal.toFixed(2).replace('.', ',')};;\n`;
                 totalGeral += subtotal;
             });
             
-            // Total geral
             csv += `\nTotal Geral;;;${totalGeral.toFixed(2).replace('.', ',')};;\n`;
             
-            // Download
             const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
             link.setAttribute('href', url);
-            link.setAttribute('download', `resumo_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.setAttribute('download', `grao_detalhe_resumo_${timestamp}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            showAlert('✅ Resumo exportado com sucesso!', 'success');
         }
-        
-        // ==================== INITIALIZATION ====================
-        
-        // Auto-load example data on page load (optional)
-        // loadExampleData();
         
     </script>
 </body>
